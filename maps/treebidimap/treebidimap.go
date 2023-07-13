@@ -8,7 +8,7 @@
 //
 // Other than key and value ordering, the goal with this structure is to avoid duplication of elements, which can be significant if contained elements are large.
 //
-// A bidirectional map, or hash bag, is an associative data structure in which the (key,value) pairs form a one-to-one correspondence.
+// A bidirectional map, or hash bag, is an associative entry structure in which the (key,value) pairs form a one-to-one correspondence.
 // Thus the binary relation is functional in each direction: value can also act as a key to key.
 // A pair (a,b) thus provides a unique coupling between 'a' and 'b' so that 'b' can be found when 'a' is used as a key and 'a' can be found when 'b' is used as a key.
 //
@@ -18,116 +18,130 @@
 package treebidimap
 
 import (
+	"cmp"
 	"fmt"
-	"github.com/geange/gods-generic/maps"
-	"github.com/geange/gods-generic/trees/redblacktree"
+	"github.com/geange/gods-generic/trees/rbtree"
 	"github.com/geange/gods-generic/utils"
 	"strings"
 )
 
 // Assert Map implementation
-var _ maps.BidiMap = (*Map)(nil)
+//var _ maps.BidiMap = (*Map)(nil)
 
 // Map holds the elements in two red-black trees.
-type Map struct {
-	forwardMap      redblacktree.Tree
-	inverseMap      redblacktree.Tree
-	keyComparator   utils.Comparator
-	valueComparator utils.Comparator
+type Map[K, V any] struct {
+	forwardMap      *rbtree.Tree[K, *entry[K, V]]
+	inverseMap      *rbtree.Tree[V, *entry[K, V]]
+	keyComparator   utils.CompareFunc[K]
+	valueComparator utils.CompareFunc[V]
 }
 
-type data struct {
-	key   interface{}
-	value interface{}
+type entry[K, V any] struct {
+	key   K
+	value V
 }
 
-// NewWith instantiates a bidirectional map.
-func NewWith(keyComparator utils.Comparator, valueComparator utils.Comparator) *Map {
-	return &Map{
-		forwardMap:      *redblacktree.NewWith(keyComparator),
-		inverseMap:      *redblacktree.NewWith(valueComparator),
+// New instantiates a bidirectional map.
+func New[K, V cmp.Ordered]() *Map[K, V] {
+	return &Map[K, V]{
+		forwardMap:      rbtree.New[K, *entry[K, V]](),
+		inverseMap:      rbtree.New[V, *entry[K, V]](),
+		keyComparator:   cmp.Compare[K],
+		valueComparator: cmp.Compare[V],
+	}
+}
+
+// NewWith instantiates a bidirectional map with key+value comparator.
+func NewWith[K, V any](keyComparator utils.CompareFunc[K], valueComparator utils.CompareFunc[V]) *Map[K, V] {
+	return &Map[K, V]{
+		forwardMap:      rbtree.NewWith[K, *entry[K, V]](keyComparator),
+		inverseMap:      rbtree.NewWith[V, *entry[K, V]](valueComparator),
 		keyComparator:   keyComparator,
 		valueComparator: valueComparator,
 	}
 }
 
-// NewWithIntComparators instantiates a bidirectional map with the IntComparator for key and value, i.e. keys and values are of type int.
-func NewWithIntComparators() *Map {
-	return NewWith(utils.IntComparator, utils.IntComparator)
-}
-
-// NewWithStringComparators instantiates a bidirectional map with the StringComparator for key and value, i.e. keys and values are of type string.
-func NewWithStringComparators() *Map {
-	return NewWith(utils.StringComparator, utils.StringComparator)
+func (m *Map[K, V]) New() *Map[K, V] {
+	return &Map[K, V]{
+		forwardMap:      rbtree.NewWith[K, *entry[K, V]](m.keyComparator),
+		inverseMap:      rbtree.NewWith[V, *entry[K, V]](m.valueComparator),
+		keyComparator:   m.keyComparator,
+		valueComparator: m.valueComparator,
+	}
 }
 
 // Put inserts element into the map.
-func (m *Map) Put(key interface{}, value interface{}) {
+func (m *Map[K, V]) Put(key K, value V) {
 	if d, ok := m.forwardMap.Get(key); ok {
-		m.inverseMap.Remove(d.(*data).value)
+		m.inverseMap.Remove(d.value)
 	}
 	if d, ok := m.inverseMap.Get(value); ok {
-		m.forwardMap.Remove(d.(*data).key)
+		m.forwardMap.Remove(d.key)
 	}
-	d := &data{key: key, value: value}
+	d := &entry[K, V]{key: key, value: value}
 	m.forwardMap.Put(key, d)
 	m.inverseMap.Put(value, d)
 }
 
 // Get searches the element in the map by key and returns its value or nil if key is not found in map.
 // Second return parameter is true if key was found, otherwise false.
-func (m *Map) Get(key interface{}) (value interface{}, found bool) {
+func (m *Map[K, V]) Get(key K) (value V, found bool) {
 	if d, ok := m.forwardMap.Get(key); ok {
-		return d.(*data).value, true
+		return d.value, true
 	}
-	return nil, false
+	return value, false
 }
 
 // GetKey searches the element in the map by value and returns its key or nil if value is not found in map.
 // Second return parameter is true if value was found, otherwise false.
-func (m *Map) GetKey(value interface{}) (key interface{}, found bool) {
+func (m *Map[K, V]) GetKey(value V) (key K, found bool) {
 	if d, ok := m.inverseMap.Get(value); ok {
-		return d.(*data).key, true
+		return d.key, true
 	}
-	return nil, false
+	return key, false
 }
 
 // Remove removes the element from the map by key.
-func (m *Map) Remove(key interface{}) {
+func (m *Map[K, V]) Remove(key K) {
 	if d, found := m.forwardMap.Get(key); found {
 		m.forwardMap.Remove(key)
-		m.inverseMap.Remove(d.(*data).value)
+		m.inverseMap.Remove(d.value)
 	}
 }
 
 // Empty returns true if map does not contain any elements
-func (m *Map) Empty() bool {
+func (m *Map[K, V]) Empty() bool {
 	return m.Size() == 0
 }
 
 // Size returns number of elements in the map.
-func (m *Map) Size() int {
+func (m *Map[K, V]) Size() int {
 	return m.forwardMap.Size()
 }
 
 // Keys returns all keys (ordered).
-func (m *Map) Keys() []interface{} {
+func (m *Map[K, V]) Keys() []K {
 	return m.forwardMap.Keys()
 }
 
 // Values returns all values (ordered).
-func (m *Map) Values() []interface{} {
+func (m *Map[K, V]) Values() []V {
 	return m.inverseMap.Keys()
 }
 
 // Clear removes all elements from the map.
-func (m *Map) Clear() {
+func (m *Map[K, V]) Clear() {
 	m.forwardMap.Clear()
 	m.inverseMap.Clear()
 }
 
+// Iterator returns a stateful iterator whose elements are key/value pairs.
+func (m *Map[K, V]) Iterator() Iterator[K, V] {
+	return Iterator[K, V]{iterator: m.forwardMap.Iterator()}
+}
+
 // String returns a string representation of container
-func (m *Map) String() string {
+func (m *Map[K, V]) String() string {
 	str := "TreeBidiMap\nmap["
 	it := m.Iterator()
 	for it.Next() {

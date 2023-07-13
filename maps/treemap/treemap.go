@@ -27,6 +27,7 @@ type Map[K, V any] struct {
 	tree *rbtree.Tree[K, V]
 }
 
+// New instantiates a tree map.
 func New[K cmp.Ordered, V any]() *Map[K, V] {
 	return &Map[K, V]{tree: rbtree.New[K, V]()}
 }
@@ -134,6 +135,11 @@ func (m *Map[K, V]) Ceiling(key K) (foundKey K, foundValue V, exist bool) {
 		return node.Key, node.Value, true
 	}
 	return
+}
+
+// Iterator returns a stateful iterator whose elements are key/value pairs.
+func (m *Map[K, V]) Iterator() Iterator[K, V] {
+	return Iterator[K, V]{iterator: m.tree.Iterator()}
 }
 
 // String returns a string representation of container

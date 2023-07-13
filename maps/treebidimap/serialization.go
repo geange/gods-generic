@@ -4,6 +4,7 @@
 
 package treebidimap
 
+/*
 import (
 	"encoding/json"
 	"github.com/geange/gods-generic/containers"
@@ -25,9 +26,9 @@ func (m *Map) ToJSON() ([]byte, error) {
 }
 
 // FromJSON populates the map from the input JSON representation.
-func (m *Map) FromJSON(data []byte) error {
+func (m *Map) FromJSON(entry []byte) error {
 	elements := make(map[string]interface{})
-	err := json.Unmarshal(data, &elements)
+	err := json.Unmarshal(entry, &elements)
 	if err == nil {
 		m.Clear()
 		for key, value := range elements {
@@ -46,3 +47,6 @@ func (m *Map) UnmarshalJSON(bytes []byte) error {
 func (m *Map) MarshalJSON() ([]byte, error) {
 	return m.ToJSON()
 }
+
+
+*/

@@ -112,3 +112,10 @@ func (m *Map[K, V]) String() string {
 	return strings.TrimRight(str, " ") + "]"
 
 }
+
+// Iterator returns a stateful iterator whose elements are key/value pairs.
+func (m *Map[K, V]) Iterator() Iterator[K, V] {
+	return Iterator[K, V]{
+		iterator: m.ordering.Iterator(),
+		table:    m.table}
+}

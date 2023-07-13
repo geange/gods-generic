@@ -19,13 +19,14 @@ import (
 // Assert Queue implementation
 //var _ queues.Queue = (*Queue)(nil)
 
-type Ptr[T any] struct {
+// pointer struct for T
+type ptr[T any] struct {
 	Value T
 }
 
 // Queue holds values in a slice.
 type Queue[T any] struct {
-	values  []*Ptr[T]
+	values  []*ptr[T]
 	start   int
 	end     int
 	full    bool
@@ -50,7 +51,7 @@ func (queue *Queue[T]) Enqueue(value T) {
 	if queue.Full() {
 		queue.Dequeue()
 	}
-	queue.values[queue.end] = &Ptr[T]{Value: value}
+	queue.values[queue.end] = &ptr[T]{Value: value}
 	queue.end = queue.end + 1
 	if queue.end >= queue.maxSize {
 		queue.end = 0
@@ -113,7 +114,7 @@ func (queue *Queue[T]) Size() int {
 
 // Clear removes all elements from the queue.
 func (queue *Queue[T]) Clear() {
-	queue.values = make([]*Ptr[T], queue.maxSize, queue.maxSize)
+	queue.values = make([]*ptr[T], queue.maxSize, queue.maxSize)
 	queue.start = 0
 	queue.end = 0
 	queue.full = false
@@ -155,4 +156,9 @@ func (queue *Queue[T]) calculateSize() int {
 		return 0
 	}
 	return queue.end - queue.start
+}
+
+// Iterator returns a stateful iterator whose values can be fetched by an index.
+func (queue *Queue[T]) Iterator() Iterator[T] {
+	return Iterator[T]{queue: queue, index: -1}
 }

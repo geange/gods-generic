@@ -86,3 +86,8 @@ func (queue *Queue[T]) String() string {
 func (queue *Queue[T]) withinRange(index int) bool {
 	return index >= 0 && index < queue.list.Size()
 }
+
+// Iterator returns a stateful iterator whose values can be fetched by an index.
+func (queue *Queue[T]) Iterator() Iterator[T] {
+	return Iterator[T]{queue: queue, index: -1}
+}

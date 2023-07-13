@@ -12,8 +12,8 @@ package trees
 import "github.com/geange/gods-generic/containers"
 
 // Tree interface that all trees implement
-type Tree interface {
-	containers.Container
+type Tree[T any] interface {
+	containers.Container[T]
 	// Empty() bool
 	// Size() int
 	// Clear()

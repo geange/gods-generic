@@ -27,6 +27,7 @@ type Set[T any] struct {
 
 var itemExists = struct{}{}
 
+// New instantiates a new empty set.
 func New[T cmp.Ordered](values ...T) *Set[T] {
 	set := &Set[T]{tree: rbtree.New[T, struct{}]()}
 	if len(values) > 0 {
@@ -163,4 +164,9 @@ func (set *Set[T]) Difference(another *Set[T]) *Set[T] {
 	}
 
 	return result
+}
+
+// Iterator holding the iterator's state
+func (set *Set[T]) Iterator() Iterator[T] {
+	return Iterator[T]{index: -1, iterator: set.tree.Iterator(), tree: set.tree}
 }

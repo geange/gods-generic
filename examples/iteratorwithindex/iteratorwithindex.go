@@ -12,7 +12,7 @@ import (
 
 // IteratorWithIndexExample to demonstrate basic usage of IteratorWithIndex
 func main() {
-	set := treeset.NewWithStringComparator()
+	set := treeset.New[string]()
 	set.Add("a", "b", "c")
 	it := set.Iterator()
 
@@ -51,8 +51,8 @@ func main() {
 	}
 
 	// Seek element starting with "b"
-	seek := func(index int, value interface{}) bool {
-		return strings.HasSuffix(value.(string), "b")
+	seek := func(index int, value string) bool {
+		return strings.HasSuffix(value, "b")
 	}
 
 	it.Begin()

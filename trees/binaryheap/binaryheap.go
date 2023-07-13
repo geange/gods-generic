@@ -28,6 +28,7 @@ type Heap[T any] struct {
 	Comparator utils.CompareFunc[T]
 }
 
+// New instantiates a new empty heap tree.
 func New[T cmp.Ordered]() *Heap[T] {
 	return &Heap[T]{
 		list:       arraylist.New[T](),
@@ -163,4 +164,9 @@ func (heap *Heap[T]) bubbleUp() {
 // Check that the index is within bounds of the list
 func (heap *Heap[T]) withinRange(index int) bool {
 	return index >= 0 && index < heap.list.Size()
+}
+
+// Iterator returns a stateful iterator whose values can be fetched by an index.
+func (heap *Heap[T]) Iterator() Iterator[T] {
+	return Iterator[T]{heap: heap, index: -1}
 }

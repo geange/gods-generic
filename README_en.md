@@ -7,24 +7,23 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gods&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gods)
 [![PyPI](https://img.shields.io/badge/License-BSD_2--Clause-green.svg)](https://github.com/geange/gods-generic/blob/main/LICENSE)
 
-# GoDS (Golang范型数据结构)
+# GoDS (Go Generic Data Structures)
 
 > go1.21+
 
-该项目基于[gods](https://github.com/emirpasic/gods)项目进行开发。在开发[lucene-go](https://github.com/geange/lucene-go)
-的过程中使用了大量的go1.18+范型语法，在使用gods的过程中，由于原项目代码并非范型语法，开发过程中遇到不少问题，
-便萌生想法实现一个范型版本的gods。
-
-gods-generic主要使用范型的方式重新实现Sets, Lists, Stacks, Maps, Trees, Queues等数据结构，并移除了avltree（个人不太喜欢这种数据格式），
-并移除了数据结构的序列化方式（由于时间问题，尚未重新进行设计）
+This project is developed based on the [gods](https://github.com/emirpasic/gods) project. In the process of
+developing [lucene-go](https://github.com/geange/lucene-go), a large amount of
+Go1.18+paradigm syntax was used. However, due to the fact that the original project code was not a paradigm syntax, many
+problems were encountered during the development process, leading to the idea of implementing a paradigm version of
+Gods. Gods generic mainly reimagines data structures such as Sets, Lists, Stacks, Maps, Trees, and Queues using a
+paradigm approach, and removes avltree (which I personally do not like) and the serialization method of data
+structures (due to time issues)
 
 ---
 
-[English](README_en.md)
-
 Implementation of various data structures and algorithms in Go.
 
-## 数据结构
+## Data Structures
 
 - [Containers](#containers)
     - [Lists](#lists)
@@ -45,7 +44,8 @@ Implementation of various data structures and algorithms in Go.
         - [HashBidiMap](#hashbidimap)
         - [TreeBidiMap](#treebidimap)
     - [Trees](#trees)
-        - [RedBlackTree](#rbtree)
+        - [RedBlackTree](#redblacktree)
+        - [AVLTree](#avltree)
         - [BTree](#btree)
         - [BinaryHeap](#binaryheap)
     - [Queues](#queues)

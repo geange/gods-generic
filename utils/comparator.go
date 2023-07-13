@@ -6,6 +6,12 @@ package utils
 
 import "time"
 
+// CompareFunc generic compare function type.
+// Should return a number:
+//
+//	negative , if a < b
+//	zero     , if a == b
+//	positive , if a > b
 type CompareFunc[T any] func(a, b T) int
 
 // Comparator will make type assertion (see IntComparator for example),

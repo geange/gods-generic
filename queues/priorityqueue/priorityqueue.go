@@ -32,6 +32,7 @@ type Queue[T any] struct {
 	Comparator utils.CompareFunc[T]
 }
 
+// New instantiates a new empty queue.
 func New[T cmp.Ordered]() *Queue[T] {
 	return &Queue[T]{
 		heap:       binaryheap.New[T](),
@@ -82,6 +83,11 @@ func (queue *Queue[T]) Clear() {
 // Values returns all elements in the queue.
 func (queue *Queue[T]) Values() []T {
 	return queue.heap.Values()
+}
+
+// Iterator returns a stateful iterator whose values can be fetched by an index.
+func (queue *Queue[T]) Iterator() Iterator[T] {
+	return Iterator[T]{iterator: queue.heap.Iterator()}
 }
 
 // String returns a string representation of container

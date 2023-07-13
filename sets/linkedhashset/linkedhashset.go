@@ -45,6 +45,7 @@ func New[T cmp.Ordered](values ...T) *Set[T] {
 	return set
 }
 
+// NewWith instantiates a new empty set with comparator and adds the passed values, if any, to the set
 func NewWith[T any](comparator utils.CompareFunc[T], values ...T) *Set[T] {
 	set := &Set[T]{
 		table:    treemap.NewWith[T, struct{}](comparator),
@@ -194,4 +195,9 @@ func (set *Set[T]) Difference(another *Set[T]) *Set[T] {
 	}
 
 	return result
+}
+
+// Iterator returns a stateful iterator whose values can be fetched by an index.
+func (set *Set[T]) Iterator() Iterator[T] {
+	return Iterator[T]{iterator: set.ordering.Iterator()}
 }

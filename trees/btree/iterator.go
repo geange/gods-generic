@@ -21,11 +21,6 @@ const (
 	begin, between, end position = 0, 1, 2
 )
 
-// Iterator returns a stateful iterator whose elements are key/value pairs.
-func (tree *Tree[K, V]) Iterator() Iterator[K, V] {
-	return Iterator[K, V]{tree: tree, node: nil, position: begin}
-}
-
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.

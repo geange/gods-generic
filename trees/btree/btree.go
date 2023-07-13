@@ -35,25 +35,20 @@ type Tree[K, V any] struct {
 	m          int                  // order (maximum number of children)
 }
 
-// Node is a single element within the tree
-type Node[K, V any] struct {
-	Parent   *Node[K, V]
-	Entries  []*Entry[K, V] // Contained keys in node
-	Children []*Node[K, V]  // Children nodes
-}
-
-// Entry represents the key-value pair contained within nodes
-type Entry[K, V any] struct {
-	Key   K
-	Value V
-}
-
-// New instantiates a B-tree with the order (maximum number of children) and a custom key comparator.
+// New instantiates a B-tree with the order (maximum number of children).
 func New[K cmp.Ordered, V any](order int) *Tree[K, V] {
 	if order < 3 {
 		panic("Invalid order, should be at least 3")
 	}
 	return &Tree[K, V]{m: order, Comparator: cmp.Compare[K]}
+}
+
+// NewWith instantiates a B-tree with the order (maximum number of children) and a custom key comparator.
+func NewWith[K, V any](comparator utils.CompareFunc[K], order int) *Tree[K, V] {
+	if order < 3 {
+		panic("Invalid order, should be at least 3")
+	}
+	return &Tree[K, V]{m: order, Comparator: comparator}
 }
 
 //// NewWithIntComparator instantiates a B-tree with the order (maximum number of children) and the IntComparator, i.e. keys are of type int.
@@ -119,19 +114,6 @@ func (tree *Tree[K, V]) Empty() bool {
 // Size returns number of nodes in the tree.
 func (tree *Tree[K, V]) Size() int {
 	return tree.size
-}
-
-// Size returns the number of elements stored in the subtree.
-// Computed dynamically on each call, i.e. the subtree is traversed to count the number of the nodes.
-func (node *Node[K, V]) Size() int {
-	if node == nil {
-		return 0
-	}
-	size := 1
-	for _, child := range node.Children {
-		size += child.Size()
-	}
-	return size
 }
 
 // Keys returns all keys in-order
@@ -217,10 +199,6 @@ func (tree *Tree[K, V]) String() string {
 	return buffer.String()
 }
 
-func (entry *Entry[K, V]) String() string {
-	return fmt.Sprintf("%v", entry.Key)
-}
-
 func (tree *Tree[K, V]) output(buffer *bytes.Buffer, node *Node[K, V], level int, isTail bool) {
 	for e := 0; e < len(node.Entries)+1; e++ {
 		if e < len(node.Children) {
@@ -231,17 +209,6 @@ func (tree *Tree[K, V]) output(buffer *bytes.Buffer, node *Node[K, V], level int
 			buffer.WriteString(fmt.Sprintf("%v", node.Entries[e].Key) + "\n")
 		}
 	}
-}
-
-func (node *Node[K, V]) height() int {
-	height := 0
-	for ; node != nil; node = node.Children[0] {
-		height++
-		if len(node.Children) == 0 {
-			break
-		}
-	}
-	return height
 }
 
 func (tree *Tree[K, V]) isLeaf(node *Node[K, V]) bool {
@@ -590,4 +557,9 @@ func (tree *Tree[K, V]) deleteChild(node *Node[K, V], index int) {
 	copy(node.Children[index:], node.Children[index+1:])
 	node.Children[len(node.Children)-1] = nil
 	node.Children = node.Children[:len(node.Children)-1]
+}
+
+// Iterator returns a stateful iterator whose elements are key/value pairs.
+func (tree *Tree[K, V]) Iterator() Iterator[K, V] {
+	return Iterator[K, V]{tree: tree, node: nil, position: begin}
 }

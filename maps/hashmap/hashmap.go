@@ -31,6 +31,7 @@ func New[K cmp.Ordered, V any]() *Map[K, V] {
 	return &Map[K, V]{m: rbtree.New[K, V]()}
 }
 
+// NewWith instantiates a hash map with key comparator.
 func NewWith[K, V any](comparator utils.CompareFunc[K]) *Map[K, V] {
 	return &Map[K, V]{m: rbtree.NewWith[K, V](comparator)}
 }

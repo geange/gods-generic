@@ -28,6 +28,7 @@ func (s sortable) Less(i, j int) bool {
 	return s.comparator(s.values[i], s.values[j]) < 0
 }
 
+// SortGeneric sorts generic values (in-place) with respect to the given comparator.
 func SortGeneric[T any](values []T, comparator CompareFunc[T]) {
 	sort.Sort(sortableG[T]{values: values, comparator: comparator})
 }

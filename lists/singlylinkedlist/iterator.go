@@ -14,11 +14,6 @@ type Iterator[T any] struct {
 	element *element[T]
 }
 
-// Iterator returns a stateful iterator whose values can be fetched by an index.
-func (list *List[T]) Iterator() Iterator[T] {
-	return Iterator[T]{list: list, index: -1, element: nil}
-}
-
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.

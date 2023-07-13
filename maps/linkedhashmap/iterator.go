@@ -18,13 +18,6 @@ type Iterator[K, V any] struct {
 	table    *rbtree.Tree[K, V]
 }
 
-// Iterator returns a stateful iterator whose elements are key/value pairs.
-func (m *Map[K, V]) Iterator() Iterator[K, V] {
-	return Iterator[K, V]{
-		iterator: m.ordering.Iterator(),
-		table:    m.table}
-}
-
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.

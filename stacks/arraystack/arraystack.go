@@ -88,3 +88,8 @@ func (stack *Stack[T]) String() string {
 func (stack *Stack[T]) withinRange(index int) bool {
 	return index >= 0 && index < stack.list.Size()
 }
+
+// Iterator returns a stateful iterator whose values can be fetched by an index.
+func (stack *Stack[T]) Iterator() Iterator[T] {
+	return Iterator[T]{stack: stack, index: -1}
+}

@@ -42,6 +42,7 @@ func New[T cmp.Ordered](values ...T) *List[T] {
 	return list
 }
 
+// NewWith instantiates a new list with comparator and adds the passed values, if any, to the list
 func NewWith[T any](comparator utils.CompareFunc[T], values ...T) *List[T] {
 	list := &List[T]{comparator: comparator}
 	if len(values) > 0 {
@@ -234,4 +235,9 @@ func (list *List[T]) shrink() {
 	if list.size <= int(float32(currentCapacity)*shrinkFactor) {
 		list.resize(list.size)
 	}
+}
+
+// Iterator returns a stateful iterator whose values can be fetched by an index.
+func (list *List[T]) Iterator() Iterator[T] {
+	return Iterator[T]{list: list, index: -1}
 }

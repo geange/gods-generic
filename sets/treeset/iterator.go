@@ -18,11 +18,6 @@ type Iterator[T any] struct {
 	tree     *rbtree.Tree[T, struct{}]
 }
 
-// Iterator holding the iterator's state
-func (set *Set[T]) Iterator() Iterator[T] {
-	return Iterator[T]{index: -1, iterator: set.tree.Iterator(), tree: set.tree}
-}
-
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.

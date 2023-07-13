@@ -13,8 +13,6 @@ package rbtree
 
 import (
 	"cmp"
-	"fmt"
-
 	"github.com/geange/gods-generic/utils"
 )
 
@@ -34,16 +32,7 @@ type Tree[K, V any] struct {
 	comparator utils.CompareFunc[K]
 }
 
-// Node is a single element within the tree
-type Node[K, V any] struct {
-	Key    K
-	Value  V
-	color  color
-	Left   *Node[K, V]
-	Right  *Node[K, V]
-	Parent *Node[K, V]
-}
-
+// New instantiates a red-black tree.
 func New[K cmp.Ordered, V any]() *Tree[K, V] {
 	return &Tree[K, V]{comparator: cmp.Compare[K]}
 }
@@ -55,6 +44,10 @@ func NewWith[K, V any](comparator utils.CompareFunc[K]) *Tree[K, V] {
 
 func (t *Tree[K, V]) Comparator() utils.CompareFunc[K] {
 	return t.comparator
+}
+
+func (t *Tree[K, V]) Root() *Node[K, V] {
+	return t.root
 }
 
 // Put inserts node into the tree.
@@ -158,22 +151,6 @@ func (t *Tree[K, V]) Empty() bool {
 // Size returns number of nodes in the tree.
 func (t *Tree[K, V]) Size() int {
 	return t.size
-}
-
-// Size returns the number of elements stored in the subtree.
-// Computed dynamically on each call, i.e. the subtree is traversed to count the number of the nodes.
-func (node *Node[K, V]) Size() int {
-	if node == nil {
-		return 0
-	}
-	size := 1
-	if node.Left != nil {
-		size += node.Left.Size()
-	}
-	if node.Right != nil {
-		size += node.Right.Size()
-	}
-	return size
 }
 
 // Keys returns all keys in-order
@@ -291,10 +268,6 @@ func (t *Tree[K, V]) String() string {
 	return str
 }
 
-func (node *Node[K, V]) String() string {
-	return fmt.Sprintf("%v", node.Key)
-}
-
 func output[K, V any](node *Node[K, V], prefix string, isTail bool, str *string) {
 	if node.Right != nil {
 		newPrefix := prefix
@@ -337,30 +310,6 @@ func (t *Tree[K, V]) lookup(key K) *Node[K, V] {
 		}
 	}
 	return nil
-}
-
-func (node *Node[K, V]) grandparent() *Node[K, V] {
-	if node != nil && node.Parent != nil {
-		return node.Parent.Parent
-	}
-	return nil
-}
-
-func (node *Node[K, V]) uncle() *Node[K, V] {
-	if node == nil || node.Parent == nil || node.Parent.Parent == nil {
-		return nil
-	}
-	return node.Parent.sibling()
-}
-
-func (node *Node[K, V]) sibling() *Node[K, V] {
-	if node == nil || node.Parent == nil {
-		return nil
-	}
-	if node == node.Parent.Left {
-		return node.Parent.Right
-	}
-	return node.Parent.Left
 }
 
 func (t *Tree[K, V]) rotateLeft(node *Node[K, V]) {
@@ -450,16 +399,6 @@ func (t *Tree[K, V]) insertCase5(node *Node[K, V]) {
 	}
 }
 
-func (node *Node[K, V]) maximumNode() *Node[K, V] {
-	if node == nil {
-		return nil
-	}
-	for node.Right != nil {
-		node = node.Right
-	}
-	return node
-}
-
 func (t *Tree[K, V]) deleteCase1(node *Node[K, V]) {
 	if node.Parent == nil {
 		return
@@ -545,4 +484,14 @@ func nodeColor[K, V any](node *Node[K, V]) color {
 		return black
 	}
 	return node.color
+}
+
+// Iterator returns a stateful iterator whose elements are key/value pairs.
+func (t *Tree[K, V]) Iterator() Iterator[K, V] {
+	return Iterator[K, V]{tree: t, node: nil, position: begin}
+}
+
+// IteratorAt returns a stateful iterator whose elements are key/value pairs that is initialised at a particular node.
+func (t *Tree[K, V]) IteratorAt(node *Node[K, V]) Iterator[K, V] {
+	return Iterator[K, V]{tree: t, node: node, position: between}
 }

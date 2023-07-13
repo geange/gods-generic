@@ -16,21 +16,21 @@ package containers
 import "github.com/geange/gods-generic/utils"
 
 // Container is base interface that all data structures implement.
-type Container interface {
+type Container[T any] interface {
 	Empty() bool
 	Size() int
 	Clear()
-	Values() []interface{}
+	Values() []T
 	String() string
 }
 
 // GetSortedValues returns sorted container's elements with respect to the passed comparator.
 // Does not affect the ordering of elements within the container.
-func GetSortedValues(container Container, comparator utils.Comparator) []interface{} {
+func GetSortedValues[T any](container Container[T], comparator utils.CompareFunc[T]) []T {
 	values := container.Values()
 	if len(values) < 2 {
 		return values
 	}
-	utils.Sort(values, comparator)
+	utils.SortGeneric(values, comparator)
 	return values
 }

@@ -13,11 +13,6 @@ type Iterator[T any] struct {
 	index int
 }
 
-// Iterator returns a stateful iterator whose values can be fetched by an index.
-func (queue *Queue[T]) Iterator() Iterator[T] {
-	return Iterator[T]{queue: queue, index: -1}
-}
-
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's index and value can be retrieved by Index() and Value().
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.

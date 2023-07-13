@@ -37,6 +37,7 @@ func New[T cmp.Ordered](values ...T) *Set[T] {
 	return set
 }
 
+// NewWith instantiates a new empty set with comparator and adds the passed values, if any, to the set
 func NewWith[T cmp.Ordered](comparator utils.CompareFunc[T], values ...T) *Set[T] {
 	set := &Set[T]{items: treemap.NewWith[T, struct{}](comparator)}
 	if len(values) > 0 {
