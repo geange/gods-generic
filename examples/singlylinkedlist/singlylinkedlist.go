@@ -5,7 +5,7 @@
 package main
 
 import (
-	"cmp"
+	"github.com/geange/gods-generic/cmp"
 	sll "github.com/geange/gods-generic/lists/singlylinkedlist"
 )
 

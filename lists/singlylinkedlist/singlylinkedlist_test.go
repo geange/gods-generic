@@ -5,7 +5,7 @@
 package singlylinkedlist
 
 import (
-	"cmp"
+	"github.com/geange/gods-generic/cmp"
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"strings"

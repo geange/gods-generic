@@ -1,6 +1,6 @@
 module github.com/geange/gods-generic
 
-go 1.21rc2
+go 1.18
 
 require github.com/stretchr/testify v1.8.4
 

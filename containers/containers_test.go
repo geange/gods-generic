@@ -7,10 +7,11 @@
 package containers
 
 import (
-	"cmp"
 	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/geange/gods-generic/cmp"
 )
 
 // For testing purposes

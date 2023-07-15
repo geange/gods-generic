@@ -9,7 +9,7 @@
 
 # GoDS (Golang范型数据结构)
 
-> go1.21+
+> go1.18+
 
 该项目基于[gods](https://github.com/emirpasic/gods)项目进行开发。在开发[lucene-go](https://github.com/geange/lucene-go)
 的过程中使用了大量的go1.18+范型语法，在使用gods的过程中，由于原项目代码并非范型语法，开发过程中遇到不少问题，

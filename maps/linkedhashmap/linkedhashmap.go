@@ -12,11 +12,12 @@
 package linkedhashmap
 
 import (
-	"cmp"
 	"fmt"
+	"strings"
+
+	"github.com/geange/gods-generic/cmp"
 	"github.com/geange/gods-generic/lists/doublylinkedlist"
 	"github.com/geange/gods-generic/trees/rbtree"
-	"strings"
 )
 
 // Assert Map implementation

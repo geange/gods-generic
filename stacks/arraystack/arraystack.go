@@ -10,10 +10,11 @@
 package arraystack
 
 import (
-	"cmp"
 	"fmt"
-	"github.com/geange/gods-generic/lists/arraylist"
 	"strings"
+
+	"github.com/geange/gods-generic/cmp"
+	"github.com/geange/gods-generic/lists/arraylist"
 )
 
 // Assert Stack implementation

@@ -5,11 +5,12 @@
 package arraylist
 
 import (
-	"cmp"
-	"github.com/stretchr/testify/assert"
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/geange/gods-generic/cmp"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestListNew(t *testing.T) {

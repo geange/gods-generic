@@ -9,7 +9,7 @@
 
 # GoDS (Go Generic Data Structures)
 
-> go1.21+
+> go1.18+
 
 This project is developed based on the [gods](https://github.com/emirpasic/gods) project. In the process of
 developing [lucene-go](https://github.com/geange/lucene-go), a large amount of

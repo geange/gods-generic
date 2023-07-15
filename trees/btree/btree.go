@@ -18,10 +18,11 @@ package btree
 
 import (
 	"bytes"
-	"cmp"
 	"fmt"
-	"github.com/geange/gods-generic/utils"
 	"strings"
+
+	"github.com/geange/gods-generic/cmp"
+	"github.com/geange/gods-generic/utils"
 )
 
 // Assert Tree implementation

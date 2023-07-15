@@ -18,11 +18,12 @@
 package treebidimap
 
 import (
-	"cmp"
 	"fmt"
+	"strings"
+
+	"github.com/geange/gods-generic/cmp"
 	"github.com/geange/gods-generic/trees/rbtree"
 	"github.com/geange/gods-generic/utils"
-	"strings"
 )
 
 // Assert Map implementation

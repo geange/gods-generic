@@ -10,10 +10,10 @@
 package arrayqueue
 
 import (
-	"cmp"
 	"fmt"
 	"strings"
 
+	"github.com/geange/gods-generic/cmp"
 	"github.com/geange/gods-generic/lists/arraylist"
 )
 

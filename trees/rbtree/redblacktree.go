@@ -12,7 +12,7 @@
 package rbtree
 
 import (
-	"cmp"
+	"github.com/geange/gods-generic/cmp"
 	"github.com/geange/gods-generic/utils"
 )
 

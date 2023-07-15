@@ -14,12 +14,13 @@
 package linkedhashset
 
 import (
-	"cmp"
 	"fmt"
+	"strings"
+
+	"github.com/geange/gods-generic/cmp"
 	"github.com/geange/gods-generic/lists/doublylinkedlist"
 	"github.com/geange/gods-generic/maps/treemap"
 	"github.com/geange/gods-generic/utils"
-	"strings"
 )
 
 // Assert Set implementation

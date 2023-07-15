@@ -16,8 +16,9 @@
 package hashbidimap
 
 import (
-	"cmp"
 	"fmt"
+
+	"github.com/geange/gods-generic/cmp"
 	"github.com/geange/gods-generic/maps/hashmap"
 )
 

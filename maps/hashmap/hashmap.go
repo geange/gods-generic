@@ -12,8 +12,9 @@
 package hashmap
 
 import (
-	"cmp"
 	"fmt"
+
+	"github.com/geange/gods-generic/cmp"
 	"github.com/geange/gods-generic/trees/rbtree"
 	"github.com/geange/gods-generic/utils"
 )

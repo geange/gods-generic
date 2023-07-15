@@ -16,11 +16,12 @@
 package priorityqueue
 
 import (
-	"cmp"
 	"fmt"
+	"strings"
+
+	"github.com/geange/gods-generic/cmp"
 	"github.com/geange/gods-generic/trees/binaryheap"
 	"github.com/geange/gods-generic/utils"
-	"strings"
 )
 
 // Assert Queue implementation
