@@ -11,7 +11,8 @@
 
 > go1.18+
 
-This project is developed based on the [gods](https://github.com/emirpasic/gods) project. In the process of
+Implementation of various data structures and algorithms in Go. This project is developed based on
+the [gods](https://github.com/emirpasic/gods) project. In the process of
 developing [lucene-go](https://github.com/geange/lucene-go), a large amount of
 Go1.18+paradigm syntax was used. However, due to the fact that the original project code was not a paradigm syntax, many
 problems were encountered during the development process, leading to the idea of implementing a paradigm version of
@@ -20,8 +21,6 @@ paradigm approach, and removes avltree (which I personally do not like) and the 
 structures (due to time issues)
 
 ---
-
-Implementation of various data structures and algorithms in Go.
 
 ## Data Structures
 
