@@ -105,6 +105,26 @@ func TestListRemove(t *testing.T) {
 	}
 }
 
+func TestListRemoveRange(t *testing.T) {
+	list := New[string]()
+	list.Add("a", "b", "c", "d", "e", "f")
+	list.RemoveRange(2, 3)
+	assert.Equal(t, []string{"a", "b", "d", "e", "f"}, list.Values())
+	assert.Equal(t, 5, list.Size())
+
+	list = New[string]()
+	list.Add("a", "b", "c", "d", "e", "f")
+	list.RemoveRange(2, 5)
+	assert.Equal(t, []string{"a", "b", "f"}, list.Values())
+	assert.Equal(t, 3, list.Size())
+
+	list = New[string]()
+	list.Add("a", "b", "c", "d", "e", "f")
+	list.RemoveRange(2, 7)
+	assert.Equal(t, []string{"a", "b"}, list.Values())
+	assert.Equal(t, 2, list.Size())
+}
+
 func TestListGet(t *testing.T) {
 	list := New[string]()
 	list.Add("a")

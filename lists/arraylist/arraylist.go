@@ -85,6 +85,34 @@ func (list *List[T]) Remove(index int) {
 	list.shrink()
 }
 
+// RemoveRange removes the element when index >= from and index < to.
+func (list *List[T]) RemoveRange(from, to int) {
+	if from == to {
+		list.Remove(from)
+		return
+	}
+
+	if from > to {
+		return
+	}
+
+	if !list.withinRange(from) {
+		return
+	}
+
+	// r.elem = append(r.elem[:fromIndex], r.elem[toIndex:]...)
+	if to > list.size {
+		to = list.size
+	}
+
+	for i := from; i < to; i++ {
+		list.elements[i] = list.empty
+	}
+	copy(list.elements[from:], list.elements[to:list.size])
+	list.size -= to - from
+	list.shrink()
+}
+
 // Contains checks if elements (one or more) are present in the set.
 // All elements have to be present in the set for the method to return true.
 // Performance time complexity of n^2.
