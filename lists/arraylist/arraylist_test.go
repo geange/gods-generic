@@ -5,7 +5,6 @@
 package arraylist
 
 import (
-	"reflect"
 	"strings"
 	"testing"
 
@@ -20,12 +19,7 @@ func TestListNew(t *testing.T) {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
 
-	list2 := NewWith[any](func(a, b any) int {
-		if reflect.DeepEqual(a, b) {
-			return 0
-		}
-		return 1
-	}, 1, "b")
+	list2 := New[any](1, "b")
 
 	if actualValue := list2.Size(); actualValue != 2 {
 		t.Errorf("Got %v expected %v", actualValue, 2)
@@ -60,10 +54,14 @@ func TestListAdd(t *testing.T) {
 }
 
 func TestListIndexOf(t *testing.T) {
+	eq := func(a, b string) bool {
+		return a == b
+	}
+
 	list := New[string]()
 
 	expectedIndex := -1
-	if index := list.IndexOf("a"); index != expectedIndex {
+	if index := list.IndexOf(eq, "a"); index != expectedIndex {
 		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
 
@@ -71,17 +69,17 @@ func TestListIndexOf(t *testing.T) {
 	list.Add("b", "c")
 
 	expectedIndex = 0
-	if index := list.IndexOf("a"); index != expectedIndex {
+	if index := list.IndexOf(eq, "a"); index != expectedIndex {
 		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
 
 	expectedIndex = 1
-	if index := list.IndexOf("b"); index != expectedIndex {
+	if index := list.IndexOf(eq, "b"); index != expectedIndex {
 		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
 
 	expectedIndex = 2
-	if index := list.IndexOf("c"); index != expectedIndex {
+	if index := list.IndexOf(eq, "c"); index != expectedIndex {
 		t.Errorf("Got %v expected %v", index, expectedIndex)
 	}
 }
@@ -184,26 +182,30 @@ func TestListClear(t *testing.T) {
 }
 
 func TestListContains(t *testing.T) {
+	eq := func(a, b string) bool {
+		return a == b
+	}
+
 	list := New[string]()
 	list.Add("a")
 	list.Add("b", "c")
-	if actualValue := list.Contains("a"); actualValue != true {
+	if actualValue := list.Contains(eq, "a"); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
-	if actualValue := list.Contains(""); actualValue != false {
+	if actualValue := list.Contains(eq, ""); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
 	}
-	if actualValue := list.Contains("a", "b", "c"); actualValue != true {
+	if actualValue := list.Contains(eq, "a", "b", "c"); actualValue != true {
 		t.Errorf("Got %v expected %v", actualValue, true)
 	}
-	if actualValue := list.Contains("a", "b", "c", "d"); actualValue != false {
+	if actualValue := list.Contains(eq, "a", "b", "c", "d"); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
 	}
 	list.Clear()
-	if actualValue := list.Contains("a"); actualValue != false {
+	if actualValue := list.Contains(eq, "a"); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
 	}
-	if actualValue := list.Contains("a", "b", "c"); actualValue != false {
+	if actualValue := list.Contains(eq, "a", "b", "c"); actualValue != false {
 		t.Errorf("Got %v expected %v", actualValue, false)
 	}
 }

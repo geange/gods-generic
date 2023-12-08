@@ -13,7 +13,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/geange/gods-generic/cmp"
 	"github.com/geange/gods-generic/utils"
 )
 
@@ -22,10 +21,9 @@ import (
 
 // List holds the elements in a slice
 type List[T any] struct {
-	elements   []T
-	size       int
-	empty      T
-	comparator utils.CompareFunc[T]
+	elements []T
+	size     int
+	empty    T
 }
 
 const (
@@ -34,17 +32,8 @@ const (
 )
 
 // New instantiates a new list and adds the passed values, if any, to the list
-func New[T cmp.Ordered](values ...T) *List[T] {
-	list := &List[T]{comparator: cmp.Compare[T]}
-	if len(values) > 0 {
-		list.Add(values...)
-	}
-	return list
-}
-
-// NewWith instantiates a new list with comparator and adds the passed values, if any, to the list
-func NewWith[T any](comparator utils.CompareFunc[T], values ...T) *List[T] {
-	list := &List[T]{comparator: comparator}
+func New[T any](values ...T) *List[T] {
+	list := &List[T]{}
 	if len(values) > 0 {
 		list.Add(values...)
 	}
@@ -63,11 +52,9 @@ func (list *List[T]) Add(values ...T) {
 // Get returns the element at index.
 // Second return parameter is true if index is within bounds of the array and array is not empty, otherwise false.
 func (list *List[T]) Get(index int) (T, bool) {
-
 	if !list.withinRange(index) {
 		return list.empty, false
 	}
-
 	return list.elements[index], true
 }
 
@@ -113,16 +100,17 @@ func (list *List[T]) RemoveRange(from, to int) {
 	list.shrink()
 }
 
+type EqualFunc[T any] func(a, b T) bool
+
 // Contains checks if elements (one or more) are present in the set.
 // All elements have to be present in the set for the method to return true.
 // Performance time complexity of n^2.
 // Returns true if no arguments are passed at all, i.e. set is always super-set of empty set.
-func (list *List[T]) Contains(values ...T) bool {
-
+func (list *List[T]) Contains(eq EqualFunc[T], values ...T) bool {
 	for _, searchValue := range values {
 		found := false
 		for index := 0; index < list.size; index++ {
-			if list.comparator(list.elements[index], searchValue) == 0 {
+			if eq(list.elements[index], searchValue) {
 				found = true
 				break
 			}
@@ -142,12 +130,12 @@ func (list *List[T]) Values() []T {
 }
 
 // IndexOf returns index of provided element
-func (list *List[T]) IndexOf(value T) int {
+func (list *List[T]) IndexOf(eq EqualFunc[T], value T) int {
 	if list.size == 0 {
 		return -1
 	}
 	for index, element := range list.elements {
-		if list.comparator(element, value) == 0 {
+		if eq(element, value) {
 			return index
 		}
 	}

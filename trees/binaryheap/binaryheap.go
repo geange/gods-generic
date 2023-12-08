@@ -40,7 +40,7 @@ func New[T cmp.Ordered]() *Heap[T] {
 // NewWith instantiates a new empty heap tree with the custom comparator.
 func NewWith[T any](comparator utils.CompareFunc[T]) *Heap[T] {
 	return &Heap[T]{
-		list:       arraylist.NewWith[T](comparator),
+		list:       arraylist.New[T](),
 		Comparator: comparator,
 	}
 }
