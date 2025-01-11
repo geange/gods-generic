@@ -11,6 +11,7 @@ package arraylist
 
 import (
 	"fmt"
+	"iter"
 	"strings"
 
 	"github.com/geange/gods-generic/utils"
@@ -124,9 +125,13 @@ func (list *List[T]) Contains(eq EqualFunc[T], values ...T) bool {
 
 // Values returns all elements in the list.
 func (list *List[T]) Values() []T {
-	newElements := make([]T, list.size, list.size)
+	newElements := make([]T, list.size)
 	copy(newElements, list.elements[:list.size])
 	return newElements
+}
+
+func (list *List[T]) values() []T {
+	return list.elements[:list.size]
 }
 
 // IndexOf returns index of provided element
@@ -212,7 +217,7 @@ func (list *List[T]) Set(index int, value T) {
 // String returns a string representation of container
 func (list *List[T]) String() string {
 	str := "ArrayList\n"
-	values := []string{}
+	values := make([]string, 0, list.size)
 	for _, value := range list.elements[:list.size] {
 		values = append(values, fmt.Sprintf("%v", value))
 	}
@@ -226,7 +231,7 @@ func (list *List[T]) withinRange(index int) bool {
 }
 
 func (list *List[T]) resize(cap int) {
-	newElements := make([]T, cap, cap)
+	newElements := make([]T, cap)
 	copy(newElements, list.elements)
 	list.elements = newElements
 }
@@ -254,6 +259,22 @@ func (list *List[T]) shrink() {
 }
 
 // Iterator returns a stateful iterator whose values can be fetched by an index.
-func (list *List[T]) Iterator() Iterator[T] {
-	return Iterator[T]{list: list, index: -1}
+func (list *List[T]) Iterator() iter.Seq[T] {
+	return func(yield func(T) bool) {
+		for _, element := range list.values() {
+			if !yield(element) {
+				return
+			}
+		}
+	}
+}
+
+func (list *List[T]) Iter() iter.Seq[T] {
+	return func(yield func(T) bool) {
+		for _, element := range list.values() {
+			if !yield(element) {
+				return
+			}
+		}
+	}
 }
